@@ -1,10 +1,11 @@
+#Задание 1
 cel = float (input("введите температуру: "))
 if cel <= 20:
     print("кондиционер включен")
 else:
     print("кондиционер выключен")
 
-
+#Задание 2
 month = int (input ("введите номер месяца: "))
 if month == 12 or month == 1 or month == 2:
     x = "зима"
@@ -21,7 +22,7 @@ if 1 <= month <= 12:
 else :
     print("неверный номер месяца")
 
-
+#Задание 3
 def age1(dog_age):
     if dog_age <= 2:
         human_age = dog_age * 10.5
