@@ -70,9 +70,9 @@ else:
     print("Не високосный год")
 
 #Задание 7
-a = float(input("Введите первое число: "))
-b = float(input("Введите второе число: "))
-c = float(input("Введите третье число: "))
+a = int(input("Введите первое число: "))
+b = int(input("Введите второе число: "))
+c = int(input("Введите третье число: "))
 if a <= b and a <= c:
     minimum = a
 elif b <= a and b <= c:
@@ -91,27 +91,27 @@ elif summa <= 10000:
     sale = 10
 else:
     sale = 15
-y = summa - sale / 100
+y = summa - ( summa * sale / 100 )
 print(f"Ваша скидка: {sale}%")
 print(f"К оплате: {y} руб.")
 
 #Заданте 9
 hour = int (input ("Введите какой сейчас час(одно число): "))
-if hour in (0, 5):
+if hour in [0, 1, 2, 3, 4, 5]:
     print("Ночь")
-elif hour in (6, 11):
+elif hour in [6, 7, 8, 9, 10, 11]:
     print("Утро")
-elif hour in (12, 17):
+elif hour in [12, 13, 14, 15, 16, 17]:
     print("День")
-elif hour in (18, 23):
+elif hour in [18, 19, 20, 21, 22, 23, 24]:
     print("Вечер")
 else:
     print("Ошибка: введите какой сейчас час")
-    
+
 #Задание 10
 n = int(input("Введите число: "))
 if n < 2:
-    print(f"{n} - составное число")
+    print(f"{n} - простое число")
 else:
     i = 2
     while i < n:
@@ -121,4 +121,4 @@ else:
         i = i + 1
     else:
         if n >= 2 and i == n:
-            print(f"{n} - gростое число")
+            print(f"{n} - простое число")
