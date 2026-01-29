@@ -227,7 +227,7 @@ def combat_room(player):
                         
             elif choice == 2:
                 # Использование зелья
-                healing_items = [item for item in player.inventory if "Зелье" in item]
+                healing_items = [item for item in player.inventory if "зелье здоровья" in item.lower()]
                 if healing_items:
                     player.heal(30)
                     player.inventory.remove(healing_items[0])
@@ -238,7 +238,7 @@ def combat_room(player):
                     
             elif choice == 3:
                 # Попытка уклонения
-                dodge_chance = player.agility/100 + 0.1
+                dodge_chance = player.agility/100 + 0.3
                 if random.random() < dodge_chance:
                     print("Вы успешно уклонились!")
                     player_damage = max(1, player.attack + random.randint(-2, 3)) * 2
@@ -327,7 +327,8 @@ def manage_inventory(player):
         print("\n1. Использовать предмет")
         print("2. Выбросить предмет")
         print("3. Экипировать предмет")
-        print("4. Выйти")
+        print("4. Снять предмет")
+        print("5. Выйти")
         
         try:
             choice = int(input("Выберите действие: "))
@@ -365,36 +366,76 @@ def manage_inventory(player):
                 if not player.inventory:
                     print("Инвентарь пуст!")
                     continue
-                    
+                
                 idx = int(input("Номер предмета: ")) - 1
                 if 0 <= idx < len(player.inventory):
-                    removed = player.inventory.pop(idx)
-                    print(f"Выброшено: {removed}")
+                    use = input(f"Вы уверены, что хотите удалить {player.inventory[idx]}? (да/нет): ").lower()
+                    if use == "да":
+                        removed = player.inventory.pop(idx)
+                        print(f"Выброшено: {removed}")
+                    elif use == "нет":
+                        continue
+                    else:
+                        print("ОШИБКА! Введите 'да' или 'нет'")
                 else:
-                    print("Неверный номер")
-                    
+                    print("ОШИБКА! Такого предмета нет")
+            
             elif choice == 3:
                 if not player.inventory:
                     print("Инвентарь пуст!")
                     continue
-                    
+                
                 idx = int(input("Номер предмета: ")) - 1
                 if 0 <= idx < len(player.inventory):
                     item = player.inventory[idx]
-                    if "меч" in item.lower() or "лук" in item.lower() or "оружие" in item.lower():
-                        player.equipped["weapon"] = item
-                        player.attack += 3
-                        print(f"Экипировано оружие: {item}")
-                    elif "доспех" in item.lower() or "броня" in item.lower():
-                        player.equipped["armor"] = item
-                        player.defense += 3
-                        print(f"Экипирована броня: {item}")
+                    # Проверка, является ли предмет оружием или бронёй
+                    item_lower = item.lower()
+                    if "меч" in item_lower or "лук" in item_lower or "оружие" in item_lower:
+                        if player.equipped["weapon"] is None:
+                            player.equipped["weapon"] = item
+                            player.attack += 3
+                            print(f"Экипировано оружие: {item}")
+                        else:
+                            print("У вас уже экипировано оружие")
+                    elif "доспех" in item_lower or "броня" in item_lower:
+                        if player.equipped["armor"] is None:
+                            player.equipped["armor"] = item
+                            player.defense += 3
+                            print(f"Экипирована броня: {item}")
+                        else:
+                            print("У вас уже экипирована броня")
                     else:
                         print("Это нельзя экипировать")
                 else:
-                    print("Неверный номер")
-                    
+                    print("Некорректный номер предмета")
+            
             elif choice == 4:
+                # Проверка и снятие экипировки
+                if player.equipped["weapon"] is not None or player.equipped["armor"] is not None:
+                    print("\nВыберите действие")
+                    print("1. Снять оружие")
+                    print("2. Снять броню")
+                    ch = input("Ваш выбор: ")
+                    if ch == '1':
+                        if player.equipped["weapon"] is not None:
+                            player.equipped["weapon"] = None
+                            player.attack -= 3
+                            print("Оружие снято.")
+                        else:
+                            print("Овидомо, оружия нет.")
+                    elif ch == '2':
+                        if player.equipped["armor"] is not None:
+                            player.equipped["armor"] = None
+                            player.defense -= 3
+                            print("Броня снята.")
+                        else:
+                            print("Броня отсутствует.")
+                    else:
+                        print("Некорректный ввод.")
+                else:
+                    print("У вас нет предметов для снятия.")                                      
+
+            elif choice == 5:
                 break
             else:
                 print("Неверный выбор")
@@ -412,7 +453,7 @@ def main_game():
     
     # Начальные предметы
     player.inventory.append("Малое зелье здоровья")
-    player.inventory.append("Малое зелье здоровья")
+    player.inventory.append("Малое зелье силы")
     
     while player.hp > 0:
         print(f"\n=== ЭТАЖ {current_floor} ===")
